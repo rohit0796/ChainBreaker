@@ -155,21 +155,21 @@ const MonthView = React.memo(function MonthView({ habits, completions, currentDa
         </div>
 
         {/* Day headers */}
-        <div className={`grid gap-2 mb-2 ${nonDailyHabits.length > 0 ? 'grid-cols-[repeat(7,minmax(0,1fr))_minmax(140px,1fr)]' : 'grid-cols-7'}`}>
+        <div className="grid gap-2 mb-2 grid-cols-7 sm:grid-cols-[repeat(7,minmax(0,1fr))_minmax(140px,1fr)]">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
             <div key={day} className="text-center text-xs text-slate-400 font-medium py-2">
               {day}
             </div>
           ))}
           {nonDailyHabits.length > 0 && (
-            <div className="text-left text-xs text-slate-400 font-medium py-2">
+            <div className="hidden sm:block text-left text-xs text-slate-400 font-medium py-2">
               Weekly Summary
             </div>
           )}
         </div>
 
         {/* Calendar grid */}
-        <div className={`grid gap-2 ${nonDailyHabits.length > 0 ? 'grid-cols-[repeat(7,minmax(0,1fr))_minmax(140px,1fr)]' : 'grid-cols-7'}`}>
+        <div className="grid gap-2 grid-cols-7 sm:grid-cols-[repeat(7,minmax(0,1fr))_minmax(140px,1fr)]">
           {Array.from({ length: weekRows }).map((_, rowIndex) => {
             const rowStart = rowIndex * 7;
             const rowDays = days.slice(rowStart, rowStart + 7);
@@ -197,7 +197,7 @@ const MonthView = React.memo(function MonthView({ habits, completions, currentDa
                   return (
                     <div
                       key={`${rowIndex}-${idx}`}
-                      className={`aspect-square rounded-lg p-2 flex flex-col items-center justify-center transition-all ${
+                      className={`aspect-square rounded-md sm:rounded-lg p-1.5 sm:p-2 flex flex-col items-center justify-center transition-all ${
                         future ? 'bg-slate-700/30 cursor-not-allowed' :
                         isPerfect ? 'bg-green-500 shadow-lg cursor-pointer hover:scale-105' :
                         hasCompletions ? 'bg-yellow-500/50 cursor-pointer hover:scale-105' :
@@ -206,7 +206,7 @@ const MonthView = React.memo(function MonthView({ habits, completions, currentDa
                         'bg-slate-700/50 hover:bg-slate-700'
                       }`}
                     >
-                      <div className={`text-sm font-semibold ${
+                      <div className={`text-[10px] sm:text-sm font-semibold ${
                         isPerfect ? 'text-white' :
                         hasCompletions ? 'text-white' :
                         isMissed ? 'text-red-300' :
@@ -216,20 +216,20 @@ const MonthView = React.memo(function MonthView({ habits, completions, currentDa
                         {day.getDate()}
                       </div>
                       {!future && totalHabits > 0 && (
-                        <div className={`text-xs mt-1 ${
+                        <div className={`text-[10px] sm:text-xs mt-0.5 sm:mt-1 ${
                           isMissed ? 'text-red-400 font-bold' : 'text-slate-300'
                         }`}>
                           {completedCount}/{totalHabits}
                         </div>
                       )}
                       {isMissed && (
-                        <div className="text-xs text-red-400">❌</div>
+                        <div className="text-[10px] text-red-400">❌</div>
                       )}
                     </div>
                   );
                 })}
                 {nonDailyHabits.length > 0 && (
-                  <div className="rounded-lg bg-slate-800/40 border border-slate-700 p-3 text-xs text-slate-300 flex flex-col justify-center">
+                  <div className="col-span-7 sm:col-span-1 mt-2 sm:mt-0 rounded-lg bg-slate-800/40 border border-slate-700 p-3 text-xs text-slate-300 flex flex-col justify-center">
                     <div className="text-[10px] text-slate-400 mb-1">{weekLabel}</div>
                     <div className="leading-relaxed">
                       {weekSummary || "No weekly habits"}
