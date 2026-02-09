@@ -58,6 +58,9 @@ const WeekView = React.memo(function WeekView({ habits, completions, currentDate
   const weekDays = getWeekDays(currentDate);
   const weekStart = weekDays[0];
   const weekEnd = weekDays[6];
+  const nowStart = new Date();
+  nowStart.setHours(0, 0, 0, 0);
+  const weekIsPast = weekEnd < nowStart;
 
   return (
     <div className="space-y-6">
@@ -99,11 +102,13 @@ const WeekView = React.memo(function WeekView({ habits, completions, currentDate
         {/* Habits */}
         <div className="space-y-4">
           {habits.map(habit => {
+            const required = habit.weeklyTarget ?? 0;
             const weekCompletions = weekDays.filter(day => {
               const dateKey = getDateKey(day);
               if (habitStartKey(habit) > dateKey) return false;
               return completions[dateKey]?.[habit.id];
             }).length;
+            const remaining = Math.max(0, required - weekCompletions);
 
             return (
               <div key={habit.id} className="bg-slate-700/30 rounded-xl p-4">
@@ -112,9 +117,14 @@ const WeekView = React.memo(function WeekView({ habits, completions, currentDate
                     <span className="text-2xl">{habit.icon}</span>
                     <div>
                       <h3 className="font-semibold">{habit.name}</h3>
-                      <span className="text-sm text-slate-400">{weekCompletions}/{habit.weeklyTarget ?? 0} this week</span>
+                      <span className="text-sm text-slate-400">{weekCompletions}/{required} this week</span>
                     </div>
                   </div>
+                  {required > 0 && (
+                    <div className={`text-sm font-medium ${weekIsPast ? (weekCompletions >= required ? 'text-green-400' : 'text-red-400') : 'text-slate-300'}`}>
+                      {weekIsPast ? (weekCompletions >= required ? '✅ Done' : '❌ Missed') : `${remaining} left`}
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-7 gap-1">
